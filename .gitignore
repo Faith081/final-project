@@ -1,0 +1,7 @@
+node_modules/
+.env
+frontend/
+FRONTEND/
+.vscode/
+package-lock.json/
+package.json/
