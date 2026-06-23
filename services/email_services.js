@@ -20,12 +20,15 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async ({ to, subject, html }) => {
 
+
   const info = await transporter.sendMail({
     from: `"INSURANCE APP" <${process.env.SMTP_USER}>`,
     to,
     subject,
     html
   })
+
+
 
   console.log("Email Send", info.response)
   return info

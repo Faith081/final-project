@@ -16,7 +16,8 @@ async function initializeTrasaction(email, amount) {
     return paystack.post("/transaction/initialize", {
         email,
         amount: amount * 100,
-        currency: "NGN"
+        currency: "NGN",
+        callback_url: `${process.env.BASE_URL}/payment-callback.html`
     })
 }
 

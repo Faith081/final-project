@@ -16,19 +16,23 @@ const registerAdmin = async (req, res) => {
 }
 
 
-const loginAdmin = async (req, res) =>{
-      const {email, password} = req.body
-    const adminData =  await adminLogin(email, password)
+const loginAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body
+    const adminData = await adminLogin(email, password)
 
     return res.status(200).json({
-        success:true,
-        message:"logged in sucessfully",
-        token : adminData.token,
-        user : {
-          username: adminData.username,
-          email : adminData.email
-        }
-})
+      success: true,
+      message: "logged in successfully",
+      token: adminData.token,
+      user: {
+        username: adminData.adminData.username,
+        email: adminData.adminData.email
+      }
+    })
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
 }
 
 

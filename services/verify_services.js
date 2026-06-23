@@ -10,6 +10,8 @@ const verifyUserService = async (token) => {
     verificationTokenExpires: { $gt: Date.now() }
   })
 
+
+
   if (!user) {
     throw new Error("Invalid or Expired")
   }

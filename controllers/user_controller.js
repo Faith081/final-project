@@ -21,18 +21,22 @@ const registerUser = async (req, res) => {
 
 
 const login = async (req, res) => {
-  const { email, password } = req.body
-  const userData = await userLogin(email, password)
+  try {
+    const { email, password } = req.body
+    const userData = await userLogin(email, password)
 
-  return res.status(200).json({
-    success: true,
-    message: "logged in sucessfully",
-    token: userData.token,
-    user: {
-      username: userData.username,
-      email: userData.email
-    }
-  })
+    return res.status(200).json({
+      success: true,
+      message: "logged in sucessfully",
+      token: userData.token,
+      user: {
+        username: userData.userData.username,
+        email: userData.userData.email
+      }
+    })
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
 }
 
 

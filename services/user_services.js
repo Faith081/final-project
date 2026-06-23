@@ -28,7 +28,7 @@ const register = async ({ username, email, password }) => {
     })
 
     // helps to create the verification link
-    const verificationLink = `${process.env.BASE_URL}/api/auth/verify/${token}`
+    const verificationLink = `${process.env.BASE_URL}/verify.html?token=${token}`
 
 
     //this send the verification email
