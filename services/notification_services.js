@@ -1,17 +1,18 @@
 const nodemailer = require("nodemailer")
+require("dotenv").config()
 
 
 const mailTransporter = nodemailer.createTransport({
-    service : "gmail",
+    service: "gmail",
     auth : {
-        user: process.env.EMAIL_USER,
-        pass : process.env.EMAIL_PASS
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
     }
 })
 
 async function sendEmail(to, subject, text){
     await mailTransporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: `"INSURANCE APP" <${process.env.SMTP_USER}>`,
         to,
         subject,
         text

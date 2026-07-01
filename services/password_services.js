@@ -5,10 +5,12 @@ const adminSchema = require("../models/admin_model")
 const sendEmail = require("./email_services")
 
 const forgotPassword = async (email) => {
+    const normalizedEmail = (email || "").trim().toLowerCase()
+
     // Check user model first, then admin model
-    let account = await userSchema.findOne({ email })
+    let account = await userSchema.findOne({ email: normalizedEmail })
     if (!account) {
-        account = await adminSchema.findOne({ email })
+        account = await adminSchema.findOne({ email: normalizedEmail })
     }
 
     if (!account) {
@@ -23,7 +25,7 @@ const forgotPassword = async (email) => {
     const resetLink = `${process.env.BASE_URL}/reset-password.html?token=${token}`
 
     await sendEmail({
-        to: email,
+        to: normalizedEmail,
         subject: "Password Reset Request",
         html: `
             <h2>Password Reset</h2>

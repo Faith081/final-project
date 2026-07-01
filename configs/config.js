@@ -10,6 +10,7 @@ const config = async () => {
 
 
     } catch (error) {
+
         console.log(error.message)
     }
 

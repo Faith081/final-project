@@ -4,7 +4,7 @@ const forgotPasswordController = async (req, res) => {
     try {
         const { email } = req.body
 
-        if (!email) {
+        if (!email || typeof email !== "string" || !email.trim()) {
             return res.status(400).json({ message: "Email address is required" })
         }
 

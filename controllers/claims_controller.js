@@ -1,4 +1,5 @@
 const { createClaim, getAllClaims, updateUserClaim, getClaimsByUser } = require("../services/claim_services")
+const { getNotificationsByUser } = require("../services/notification_message_service")
 
 
 const userClaims = async (req, res) => {
@@ -94,4 +95,18 @@ const userGetClaims = async (req, res) => {
     }
 }
 
-module.exports = { userClaims, getAllUserClaims, claimUpdate, userGetClaims }
+const getUserNotifications = async (req, res) => {
+    try {
+        const userId = req.user.id
+        const notifications = await getNotificationsByUser(userId)
+
+        res.status(200).json({
+            success: true,
+            data: notifications
+        })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+module.exports = { userClaims, getAllUserClaims, claimUpdate, userGetClaims, getUserNotifications }

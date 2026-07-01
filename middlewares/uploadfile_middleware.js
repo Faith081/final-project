@@ -1,12 +1,12 @@
 const multer = require("multer")
-const {CloudinaryStorage} = require("multer-storage-cloudinary")
+const { CloudinaryStorage } = require("multer-storage-cloudinary")
 const cloudinary = require("cloudinary").v2
 
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
-    api_key : process.env.CLOUD_API_KEY,
-    api_secret : process.env.CLOUD_API_SECRET
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET
 })
 
 
@@ -15,16 +15,18 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary,
-    params : {
-        folder : "claims",
-        allowed_formats : ["jpg", "png", "pdf", "docx"] 
+    params: {
+        folder: "claims",
+        allowed_formats: ["jpg", "png", "pdf", "docx"]
     }
 })
 
 
-const uploadDisk =multer({
+const uploadDisk = multer({
     storage,
     limits: { fileSize: 2 * 1024 * 1024 }
 })
 
-module.exports = {uploadDisk}
+module.exports = { uploadDisk }
+
+

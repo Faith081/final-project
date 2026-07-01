@@ -21,11 +21,15 @@ exports.verifyPayment = async (req, res) => {
 
         if (response.data.data.status === "success") {
 
-            await sendEmail(
-                response.data.data.customer.email,
-                "Payment Confirmed",
-                `your payment with reference ${reference}`
-            )
+            try {
+                await sendEmail(
+                    response.data.data.customer.email,
+                    "Payment Confirmed",
+                    `your payment with reference ${reference}`
+                )
+            } catch (emailError) {
+                console.log("Payment confirmed but email failed:", emailError.message)
+            }
 
             res.json({ message: "payment successfully", data: response.data.data })
         } else {
