@@ -5,7 +5,7 @@ const mongoose = require("mongoose")
 const config = async () => {
     try {
 
-        await mongoose.connect("mongodb://Faith:Faith123@ac-ojy59xm-shard-00-00.2n6pt2u.mongodb.net:27017,ac-ojy59xm-shard-00-01.2n6pt2u.mongodb.net:27017,ac-ojy59xm-shard-00-02.2n6pt2u.mongodb.net:27017/myDatabase?ssl=true&authSource=admin&retryWrites=true&w=majority")
+        await mongoose.connect(process.env.DATABASE_URL)
         console.log("Database connected successfully")
 
 
