@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - InsureNow</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/index.html" class="nav-logo">InsureNow</a>
+      <ul class="nav-links">
+        <li><a href="/plans.html">Plans</a></li>
+        <li><a href="/dashboard.html" style="color:var(--primary)">Dashboard</a></li>
+        <li><a href="/claims.html">Claims</a></li>
+        <li><a href="#" onclick="api.logout(); return false;">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-layout">
+    <aside class="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="user-avatar">U</div>
+        <div class="sidebar-name" id="user-name">User</div>
+        <div class="sidebar-email" id="user-email"></div>
+      </div>
+      <ul class="sidebar-nav">
+        <li>
+          <a href="/dashboard.html" class="active">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Overview
+          </a>
+        </li>
+        <li>
+          <a href="/plans.html">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Browse Plans
+          </a>
+        </li>
+        <li>
+          <a href="/claims.html">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Submit Claim
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-logout" onclick="api.logout(); return false;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Logout
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-nav-row">
+        <a href="/index.html" class="btn-back">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Home
+        </a>
+        <a href="/plans.html" class="btn-next">
+          Browse Plans
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="page-header">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle" id="welcome-msg">Welcome back!</p>
+      </div>
+
+      <div id="notification-banner" class="alert" style="display:none; margin-bottom:1rem;"></div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-policies">—</div>
+          <div class="stat-label">Active Policies</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-claims">—</div>
+          <div class="stat-label">Total Claims</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-pending">—</div>
+          <div class="stat-label">Pending Claims</div>
+        </div>
+      </div>
+
+      <!-- Policies Section -->
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-header">
+          <span class="card-title">My Policies</span>
+          <a href="/plans.html" class="btn btn-outline btn-sm">Buy New Plan</a>
+        </div>
+        <div id="policies-content">
+          <div class="loading-wrapper">
+            <div class="spinner"></div>
+            <span>Loading policies...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Claims Section -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">My Claims</span>
+          <a href="/claims.html" class="btn btn-outline btn-sm">Submit Claim</a>
+        </div>
+        <div id="claims-content">
+          <div class="loading-wrapper">
+            <div class="spinner"></div>
+            <span>Loading claims...</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script>
+    if (!api.requireAuth()) throw new Error('redirect')
+
+    const user = api.getUser()
+    if (user) {
+      const initial = (user.username || user.email || 'U')[0].toUpperCase()
+      document.getElementById('user-avatar').textContent = initial
+      document.getElementById('user-name').textContent = user.username || 'User'
+      document.getElementById('user-email').textContent = user.email || ''
+      document.getElementById('welcome-msg').textContent = `Welcome back, ${user.username || 'there'}!`
+    }
+
+    async function loadDashboard() {
+      const [policiesRes, claimsRes, notificationsRes] = await Promise.allSettled([
+        api.fetch('/policy'),
+        api.fetch('/claims'),
+        api.fetch('/notifications')
+      ])
+
+      const notificationBanner = document.getElementById('notification-banner')
+      if (notificationsRes.status === 'fulfilled' && notificationsRes.value.data?.length) {
+        const latest = notificationsRes.value.data[0]
+        notificationBanner.style.display = 'block'
+        notificationBanner.className = 'alert alert-success show'
+        notificationBanner.textContent = latest.message || 'You have a new update.'
+      } else {
+        notificationBanner.style.display = 'none'
+      }
+
+      // Policies
+      const policiesEl = document.getElementById('policies-content')
+      if (policiesRes.status === 'fulfilled') {
+        const policies = policiesRes.value.data || []
+        document.getElementById('stat-policies').textContent = policies.filter(p => p.status === 'active').length
+        if (!policies.length) {
+          policiesEl.innerHTML = `
+          <div class="empty-state">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            <p>No policies yet. <a href="/plans.html" style="color:var(--primary)">Browse plans</a> to get started.</p>
+          </div>`
+        } else {
+          policiesEl.innerHTML = `
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${policies.map(p => `
+                  <tr>
+                    <td><strong>${p.plan?.name || '—'}</strong></td>
+                    <td>${formatDate(p.startDate)}</td>
+                    <td>${formatDate(p.endDate)}</td>
+                    <td><span class="badge badge-${p.status}">${p.status}</span></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>`
+        }
+      } else {
+        policiesEl.innerHTML = `<p style="padding:1.5rem;color:var(--danger)">Could not load policies.</p>`
+        document.getElementById('stat-policies').textContent = '—'
+      }
+
+      // Claims
+      const claimsEl = document.getElementById('claims-content')
+      if (claimsRes.status === 'fulfilled') {
+        const claims = claimsRes.value.data || []
+        document.getElementById('stat-claims').textContent = claims.length
+        document.getElementById('stat-pending').textContent = claims.filter(c => c.status === 'pending').length
+        if (!claims.length) {
+          claimsEl.innerHTML = `
+          <div class="empty-state">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p>No claims submitted yet. <a href="/claims.html" style="color:var(--primary)">Submit a claim.</a></p>
+          </div>`
+        } else {
+          claimsEl.innerHTML = `
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Policy</th>
+                  <th>Amount</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${claims.map(c => `
+                  <tr>
+                    <td>${c.policy?.plan?.name || '—'}</td>
+                    <td><strong>${formatCurrency(c.amount)}</strong></td>
+                    <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.description || '—'}</td>
+                    <td>${formatDate(c.createdAt)}</td>
+                    <td><span class="badge badge-${c.status}">${c.status}</span></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>`
+        }
+      } else {
+        claimsEl.innerHTML = `<p style="padding:1.5rem;color:var(--danger)">Could not load claims.</p>`
+        document.getElementById('stat-claims').textContent = '—'
+        document.getElementById('stat-pending').textContent = '—'
+      }
+    }
+
+    loadDashboard()
+  </script>
+
+</body>
+
+</html>

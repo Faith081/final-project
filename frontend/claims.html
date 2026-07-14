@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Claim - InsureNow</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/index.html" class="nav-logo">InsureNow</a>
+    <ul class="nav-links">
+      <li><a href="/plans.html">Plans</a></li>
+      <li><a href="/dashboard.html">Dashboard</a></li>
+      <li><a href="/claims.html" style="color:var(--primary)">Claims</a></li>
+      <li><a href="#" onclick="api.logout(); return false;">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="user-avatar">U</div>
+      <div class="sidebar-name" id="user-name">User</div>
+      <div class="sidebar-email" id="user-email"></div>
+    </div>
+    <ul class="sidebar-nav">
+      <li>
+        <a href="/dashboard.html">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Overview
+        </a>
+      </li>
+      <li>
+        <a href="/plans.html">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          Browse Plans
+        </a>
+      </li>
+      <li>
+        <a href="/claims.html" class="active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Submit Claim
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-logout" onclick="api.logout(); return false;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Logout
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-nav-row">
+      <a href="/dashboard.html" class="btn-back">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+    </div>
+
+    <div class="page-header">
+      <h1 class="page-title">Submit a Medical Claim</h1>
+      <p class="page-subtitle">Fill in your medical details below to file a health insurance claim</p>
+    </div>
+
+    <div style="max-width:600px;">
+      <div id="alert" class="alert"></div>
+
+      <div id="success-state" style="display:none;" class="card">
+        <div class="card-body" style="text-align:center;padding:3rem;">
+          <div style="width:72px;height:72px;background:#d1fae5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+            <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="#16a34a" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:0.5rem;">Claim Submitted!</h2>
+          <p style="color:var(--muted);margin-bottom:1.5rem;">Your medical claim has been submitted and is under review. We will notify you once it is processed.</p>
+          <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-outline" onclick="resetForm()">Submit Another</button>
+            <a href="/dashboard.html" class="btn btn-primary">Go to Dashboard</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="claim-form-card">
+        <div class="card-header">
+          <span class="card-title">Claim Details</span>
+        </div>
+        <div class="card-body">
+          <div id="no-policies" class="alert alert-warning" style="display:none;">
+            You don't have any active policies. <a href="/plans.html" style="color:var(--primary-dark);font-weight:600;">Buy a plan first.</a>
+          </div>
+
+          <form id="claim-form">
+            <div class="form-group">
+              <label for="policyId">Select Policy</label>
+              <select id="policyId" class="form-control" required>
+                <option value="">Loading policies...</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="amount">Medical Claim Amount (&#x20A6;)</label>
+              <input type="number" id="amount" class="form-control" placeholder="e.g. 50000" required min="1">
+            </div>
+
+            <div class="form-group">
+              <label for="description">Description of Medical Service</label>
+              <textarea id="description" class="form-control" placeholder="e.g. Hospital admission for malaria treatment, outpatient consultation, pharmacy purchase, lab tests..." rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="receipt">Upload Hospital Bill / Medical Receipt</label>
+              <input type="file" id="receipt" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.docx">
+              <p style="font-size:0.8125rem;color:var(--muted);margin-top:0.375rem;">Upload your hospital invoice, prescription receipt, or lab result. Accepted: JPG, PNG, PDF, DOCX. Max: 2MB.</p>
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn btn-primary btn-full">Submit Claim</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+  if (!api.requireAuth()) throw new Error('redirect')
+
+  const user = api.getUser()
+  if (user) {
+    const initial = (user.username || user.email || 'U')[0].toUpperCase()
+    document.getElementById('user-avatar').textContent = initial
+    document.getElementById('user-name').textContent = user.username || 'User'
+    document.getElementById('user-email').textContent = user.email || ''
+  }
+
+  async function loadPolicies() {
+    const select = document.getElementById('policyId')
+    const noPoliciesEl = document.getElementById('no-policies')
+    const form = document.getElementById('claim-form')
+
+    try {
+      const res = await api.fetch('/policy')
+      const policies = (res.data || []).filter(p => p.status === 'active')
+
+      if (!policies.length) {
+        select.innerHTML = '<option value="">No active policies found</option>'
+        select.disabled = true
+        noPoliciesEl.style.display = 'block'
+        form.querySelector('button[type=submit]').disabled = true
+        return
+      }
+
+      select.innerHTML = `<option value="">Select a policy...</option>` +
+        policies.map(p => `<option value="${p._id}">${p.plan?.name || 'Policy'} — expires ${formatDate(p.endDate)}</option>`).join('')
+
+    } catch {
+      select.innerHTML = '<option value="">Failed to load policies</option>'
+      select.disabled = true
+    }
+  }
+
+  const form = document.getElementById('claim-form')
+  const alert = document.getElementById('alert')
+  const btn = document.getElementById('submit-btn')
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    hideAlert(alert)
+
+    const policyId = document.getElementById('policyId').value
+    const amount = document.getElementById('amount').value
+    const description = document.getElementById('description').value
+    const receipt = document.getElementById('receipt').files[0]
+
+    if (!policyId) {
+      showAlert(alert, 'Please select a policy.')
+      return
+    }
+
+    if (receipt && receipt.size > 2 * 1024 * 1024) {
+      showAlert(alert, 'File size must be 2MB or less.')
+      return
+    }
+
+    setLoading(btn, true, 'Submitting...')
+
+    const formData = new FormData()
+    formData.append('policyId', policyId)
+    formData.append('amount', amount)
+    formData.append('description', description)
+    if (receipt) formData.append('receipt', receipt)
+
+    try {
+      await api.upload('/claims', formData)
+
+      document.getElementById('claim-form-card').style.display = 'none'
+      document.getElementById('success-state').style.display = 'block'
+
+    } catch (err) {
+      showAlert(alert, err.message)
+    } finally {
+      setLoading(btn, false)
+    }
+  })
+
+  function resetForm() {
+    document.getElementById('claim-form-card').style.display = 'block'
+    document.getElementById('success-state').style.display = 'none'
+    form.reset()
+    hideAlert(alert)
+  }
+
+  loadPolicies()
+</script>
+
+</body>
+</html>

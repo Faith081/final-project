@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - InsureNow</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/admin-dashboard.html" class="nav-logo">InsureNow Admin</a>
+    <ul class="nav-links">
+      <li>
+        <span style="background:#fef3c7;color:#92400e;font-size:0.75rem;font-weight:600;padding:0.25rem 0.75rem;border-radius:999px;" id="admin-badge">Admin</span>
+      </li>
+      <li><a href="#" onclick="api.logout(); return false;">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="admin-avatar" style="background:#fef3c7;color:#92400e;">A</div>
+      <div class="sidebar-name" id="admin-name">Admin</div>
+      <div class="sidebar-email" id="admin-email"></div>
+    </div>
+    <ul class="sidebar-nav">
+      <li>
+        <a href="#" class="active" onclick="showTab('plans'); return false;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          Manage Plans
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showTab('claims'); return false;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          All Claims
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-logout" onclick="api.logout(); return false;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Logout
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- PLANS TAB -->
+    <div id="tab-plans" class="tab-panel active">
+      <div class="page-nav-row">
+        <a href="/index.html" class="btn-back">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          Home
+        </a>
+        <a href="#" class="btn-next" onclick="showTab('claims'); return false;">
+          View All Claims
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="page-header">
+        <h1 class="page-title">Insurance Plans</h1>
+        <p class="page-subtitle">Create and manage your insurance plans</p>
+      </div>
+
+      <!-- Create Plan Form -->
+      <div class="card" style="margin-bottom:2rem;">
+        <div class="card-header">
+          <span class="card-title">Create New Plan</span>
+        </div>
+        <div class="card-body">
+          <div id="plan-alert" class="alert"></div>
+          <div id="plan-success" class="alert alert-success" style="display:none;">Plan created successfully!</div>
+
+          <form id="plan-form">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group">
+                <label for="plan-name">Plan Name</label>
+                <input type="text" id="plan-name" class="form-control" placeholder="e.g. Basic Health Plan" required>
+              </div>
+              <div class="form-group">
+                <label for="plan-type">Plan Type</label>
+                <input type="text" id="plan-type" class="form-control" placeholder="e.g. Individual, Family, HMO">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group">
+                <label for="plan-price">Annual Premium (&#x20A6;)</label>
+                <input type="number" id="plan-price" class="form-control" placeholder="e.g. 50000" required min="1">
+              </div>
+              <div class="form-group">
+                <label for="plan-duration">Duration</label>
+                <input type="text" id="plan-duration" class="form-control" placeholder="e.g. 1 Year">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="plan-coverage">Medical Coverage Limit</label>
+              <input type="text" id="plan-coverage" class="form-control" placeholder="e.g. Up to ₦5,000,000 hospital bills">
+            </div>
+            <div class="form-group">
+              <label for="plan-description">Plan Description</label>
+              <textarea id="plan-description" class="form-control" placeholder="e.g. Covers inpatient and outpatient treatments, pharmacy, lab tests, and specialist consultations..." rows="3"></textarea>
+            </div>
+            <button type="submit" id="create-plan-btn" class="btn btn-primary">Create Plan</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Plans List -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">All Plans</span>
+          <button class="btn btn-outline btn-sm" onclick="loadPlans()">Refresh</button>
+        </div>
+        <div id="plans-list">
+          <div class="loading-wrapper">
+            <div class="spinner"></div>
+            <span>Loading plans...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLAIMS TAB -->
+    <div id="tab-claims" class="tab-panel">
+      <div class="page-nav-row">
+        <a href="#" class="btn-back" onclick="showTab('plans'); return false;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          Back to Plans
+        </a>
+      </div>
+      <div class="page-header">
+        <h1 class="page-title">All Claims</h1>
+        <p class="page-subtitle">Review and update customer claim statuses</p>
+      </div>
+
+      <div class="stats-grid" style="margin-bottom:2rem;">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-label">Total Claims</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-pending-claims" style="color:var(--warning)">—</div>
+          <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-approved" style="color:var(--success)">—</div>
+          <div class="stat-label">Approved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-rejected" style="color:var(--danger)">—</div>
+          <div class="stat-label">Rejected</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Claims</span>
+          <button class="btn btn-outline btn-sm" onclick="loadClaims()">Refresh</button>
+        </div>
+        <div id="claims-list">
+          <div class="loading-wrapper">
+            <div class="spinner"></div>
+            <span>Loading claims...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Update Claim Modal -->
+<div class="modal-overlay" id="update-modal">
+  <div class="modal">
+    <h2 class="modal-title">Update Claim Status</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.9375rem;">
+      Choose the new status for this claim.
+    </p>
+    <div id="update-alert" class="alert"></div>
+    <div class="form-group">
+      <label>New Status</label>
+      <select id="new-status" class="form-control">
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeUpdateModal()">Cancel</button>
+      <button class="btn btn-primary" id="update-confirm-btn" onclick="submitUpdate()">Update</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+  if (!api.requireAdmin()) throw new Error('redirect')
+
+  const user = api.getUser()
+  if (user) {
+    const initial = (user.username || user.email || 'A')[0].toUpperCase()
+    document.getElementById('admin-avatar').textContent = initial
+    document.getElementById('admin-name').textContent = user.username || 'Admin'
+    document.getElementById('admin-email').textContent = user.email || ''
+  }
+
+  let activeTab = 'plans'
+  let currentClaimId = null
+
+  function showTab(tab) {
+    document.getElementById('tab-plans').classList.remove('active')
+    document.getElementById('tab-claims').classList.remove('active')
+    document.getElementById(`tab-${tab}`).classList.add('active')
+
+    document.querySelectorAll('.sidebar-nav a:not(.nav-logout)').forEach(a => a.classList.remove('active'))
+    event.currentTarget.classList.add('active')
+
+    activeTab = tab
+    if (tab === 'claims') loadClaims()
+  }
+
+  // ===== PLANS =====
+  async function loadPlans() {
+    const el = document.getElementById('plans-list')
+    el.innerHTML = '<div class="loading-wrapper"><div class="spinner"></div><span>Loading...</span></div>'
+    try {
+      const res = await api.fetch('/plan')
+      const plans = res.data || []
+      if (!plans.length) {
+        el.innerHTML = '<div class="empty-state"><p>No plans created yet.</p></div>'
+        return
+      }
+      el.innerHTML = `
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th><th>Type</th><th>Price</th><th>Coverage</th><th>Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${plans.map(p => `
+                <tr>
+                  <td><strong>${p.name}</strong></td>
+                  <td>${p.plan || '—'}</td>
+                  <td><strong>${formatCurrency(p.price)}</strong></td>
+                  <td>${p.coveration || '—'}</td>
+                  <td>${p.duration || '—'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>`
+    } catch (err) {
+      el.innerHTML = `<p style="padding:1.5rem;color:var(--danger)">Failed to load plans: ${err.message}</p>`
+    }
+  }
+
+  const planForm = document.getElementById('plan-form')
+  const planAlert = document.getElementById('plan-alert')
+  const planSuccess = document.getElementById('plan-success')
+  const createPlanBtn = document.getElementById('create-plan-btn')
+
+  planForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    hideAlert(planAlert)
+    planSuccess.style.display = 'none'
+    setLoading(createPlanBtn, true, 'Creating...')
+
+    const adminUser = api.getUser()
+    const body = {
+      name: document.getElementById('plan-name').value.trim(),
+      plan: document.getElementById('plan-type').value.trim(),
+      price: Number(document.getElementById('plan-price').value),
+      duration: document.getElementById('plan-duration').value.trim(),
+      coveration: document.getElementById('plan-coverage').value.trim(),
+      description: document.getElementById('plan-description').value.trim(),
+      createdBy: adminUser?.id
+    }
+
+    try {
+      await api.fetch('/plan', { method: 'POST', body: JSON.stringify(body) })
+      planSuccess.style.display = 'block'
+      planForm.reset()
+      loadPlans()
+    } catch (err) {
+      showAlert(planAlert, err.message)
+    } finally {
+      setLoading(createPlanBtn, false)
+    }
+  })
+
+  // ===== CLAIMS =====
+  async function loadClaims() {
+    const el = document.getElementById('claims-list')
+    el.innerHTML = '<div class="loading-wrapper"><div class="spinner"></div><span>Loading...</span></div>'
+    try {
+      const res = await api.fetch('/claims/all')
+      const claims = res.data || []
+
+      document.getElementById('stat-total').textContent = claims.length
+      document.getElementById('stat-pending-claims').textContent = claims.filter(c => c.status === 'pending').length
+      document.getElementById('stat-approved').textContent = claims.filter(c => c.status === 'approved').length
+      document.getElementById('stat-rejected').textContent = claims.filter(c => c.status === 'rejected').length
+
+      if (!claims.length) {
+        el.innerHTML = '<div class="empty-state"><p>No claims submitted yet.</p></div>'
+        return
+      }
+
+      el.innerHTML = `
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th><th>Email</th><th>Amount</th><th>Description</th><th>Date</th><th>Status</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${claims.map(c => `
+                <tr>
+                  <td><strong>${c.user?.username || '—'}</strong></td>
+                  <td>${c.user?.email || '—'}</td>
+                  <td><strong>${formatCurrency(c.amount)}</strong></td>
+                  <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.description || '—'}</td>
+                  <td>${formatDate(c.createdAt)}</td>
+                  <td><span class="badge badge-${c.status}">${c.status}</span></td>
+                  <td>
+                    ${c.status === 'pending'
+                      ? `<button class="btn btn-sm btn-outline" onclick="openUpdateModal('${c._id}')">Update</button>`
+                      : '—'
+                    }
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>`
+    } catch (err) {
+      el.innerHTML = `<p style="padding:1.5rem;color:var(--danger)">Failed to load claims: ${err.message}</p>`
+    }
+  }
+
+  function openUpdateModal(claimId) {
+    currentClaimId = claimId
+    hideAlert(document.getElementById('update-alert'))
+    document.getElementById('update-modal').classList.add('open')
+  }
+
+  function closeUpdateModal() {
+    document.getElementById('update-modal').classList.remove('open')
+    currentClaimId = null
+  }
+
+  async function submitUpdate() {
+    if (!currentClaimId) return
+    const btn = document.getElementById('update-confirm-btn')
+    const updateAlert = document.getElementById('update-alert')
+    const status = document.getElementById('new-status').value
+    hideAlert(updateAlert)
+    setLoading(btn, true, 'Updating...')
+
+    try {
+      await api.fetch(`/claims/${currentClaimId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ status })
+      })
+      closeUpdateModal()
+      loadClaims()
+    } catch (err) {
+      showAlert(updateAlert, err.message)
+    } finally {
+      setLoading(btn, false)
+    }
+  }
+
+  document.getElementById('update-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeUpdateModal()
+  })
+
+  // Initial load
+  loadPlans()
+</script>
+
+</body>
+</html>
